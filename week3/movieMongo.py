@@ -8,6 +8,7 @@ db = client.dbsparta                      # 'dbsparta'라는 이름의 db를 만
 # URL을 읽어서 HTML를 받아오고,
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+# User Agent 브라우저 정보 얻기(크롬인지 아닌지 체크하기)
 data = requests.get('https://movie.naver.com/movie/sdb/rank/rmovie.nhn?sel=pnt&date=20190909', headers=headers)
 
 # HTML을 BeautifulSoup이라는 라이브러리를 활용해 검색하기 용이한 상태로 만듦
@@ -22,15 +23,4 @@ for movie in movies:
     # movie 안에 a 가 있으면,
     a_tag = movie.select_one('td.title > div > a')
     if a_tag is not None:
-        title = a_tag.text
-        star = movie.select_one('td.point').text
-        #print(rank, title, star)
-
-        doc = {
-            'rank': rank,
-            'title': title,
-            'star': star
-        }
-        db.movies.insert_one(doc)
-
-        rank += 1
+        print(a_tag.text)
