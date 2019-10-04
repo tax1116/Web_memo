@@ -9,5 +9,6 @@ target_movie = db.movies.find_one({'title':'사운드 오브 뮤직'})
 
 for movie_compare in all_movie:
     if movie_compare['star'] == target_movie['star']:
+        db.movies.update_one({'title': movie_compare['title']}, {"$set": {'star': 0}})
         print(movie_compare['title'])
 ## 코딩 할 준비 ##
