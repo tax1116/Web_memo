@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>title</title>
+
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		
+		<!-- JS -->		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      
+      function order(){
+        let name = $('#order-name').val();
+        let count = $('#order-quantity').val();
+        let address = $('#order-address').val();
+        let phone = $('#order-phone').val();
+        let item = "홈셔츠";
+
+        if(name==""){
+          alert('이름을 입력해주세요.');
+        }
+
+        else if(count==""){
+          alert('수량을 선택해주세요.');
+        }
+
+        else if(address==""){
+          alert('주소를 입력해주세요.');
+        }
+
+        else if(phone==""){
+          alert('전화번호를 입력해주세요.');
+        }
+
+        else{
+          $.ajax({
+            type:"POST",
+            url:"http://spartacodingclub.shop/order",
+            data:{name_give:name, count_give:count, address_give:address, phone_give:phone, item_give:item},
+            success: function(response){
+              if(response['result']=='success'){
+                alert('주문 성공!');
+                window.location.reload();
+              }
+              else{
+                alert('서버 오류!');
+              }
+            }
+          })
+        }
+      }
+
+      $(document).ready(function(){
+        $('#order-box').html('');
+        listing();
+      });
+      
+      function make_list(item,name,count,address,phone){
+        let temp_html='<tr>\
+              <td>'+item+'</td>\
+              <td>'+name+'</td>\
+              <td>'+count+'</td>\
+              <td>'+address+'</td>\
+              <td>'+phone+'</td>\
+            </tr>';
+            $('#order-box').append(temp_html);
+      }
+
+      function listing(){
+        $.ajax({
+          type: "GET",
+          url:"http://spartacodingclub.shop/order?item_give=홈셔츠",
+          data:{},
+          success: function(response){
+            if(response['result']=='success'){
+              let order = response['orders'];
+              for(let i=0; i<order.length;i++){
+                make_list(order[i]['item'],order[i]['name'],order[i]['count'],order[i]['address'],order[i]['phone']);
+              }
+            }
+            else{
+              alert('주문목록을 불러오지 못하였습니다.');
+            }
+          }
+        })
+      } 
+    </script>
+
+    <!--구글폰트-->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Oswald:200,300,400,500,600,700&display=swap&subset=korean" rel="stylesheet">
+    
+    <!--CSS 분리-->
+    <link rel = "stylesheet" type = "text/css" href = "css/index.css">
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">      
+
+      <a class="navbar-brand" href="#"><img src="logo/ars_logo.gif" width="25" height="30" alt=""> Gunner's Mall</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-right">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#">KIT</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mens</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">NEW IN</a>
+              <a class="dropdown-item" href="#">Sale</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Casual</a>
+              <a class="dropdown-item" href="#">Training</a>
+              <a class="dropdown-item" href="#">Shoes</a>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Womens</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">NEW IN</a>
+            <a class="dropdown-item" href="#">Sale</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Training</a>
+            <a class="dropdown-item" href="#">Shoes</a>
+            </div>
+          </li>
+
+          <li class="nav-item">
+           <a class="nav-link" href="#">Gift&Accessories</a>
+          </li>
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <div class="btn-group">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../logo/user_icon.gif" width="15" height="18" alt=""> User<span class="carnet"></span></a>
+             <ul class="dropdown-menu">
+                <a class="dropdown-item" href="#">Login</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Register</a>
+              </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!--상품 이미지영역-->
+      <div class="row">
+        <h1 class="product-header py-4">Arsenal Adult 19/20 Home Shirt</h1>
+        <div class="col-md-8 col-lg-8">
+          <div class="col-md-12 col-lg-12 product-image-wrapper">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+              <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+              </ol>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img class="d-block w-100" src="img/ars_jumbo.jpg" alt="First slide">
+                </div>
+          
+                <div class="carousel-item">
+                  <img class="d-block w-100" src="img/ars_jumbo1.jpg" alt="Second slide">
+                </div>
+          
+                <div class="carousel-item">
+                  <img class="d-block w-100" src="img/ars_jumbo2.jpg" alt="Third slide">
+                </div>
+              </div>
+            
+              <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+            
+              <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="product-info-user border" style="margin-top: 5px;">
+                <h4 class="info-box-text">Order</h4>
+                <div class="row">
+                  <div class="col-xs-12 col-md-12">
+                    <div class="info-user">Name <input id="order-name" type="text" class="form-control" placeholder="Name"></div>
+                    <div class="info-user">Address <input id="order-address" type="text" class="form-control" placeholder="Address"></div>
+                    <div class="info-user">Phone <input id="order-phone" type="tel" class="form-control" placeholder="tel"></div>
+                    <div class="row">
+                      <div class="col-xs-6 col-md-6">  
+                        <div class="info-quantity">Selcet quantity:</div>
+                      </div>
+                      <div class="col-xs-6 col-md-6">
+                        <div class="info-quantity text-right">
+                          <select id="order-quantity" class="btn-lg btn-block" >
+                            <option selected value="">--Quantity--</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-xs-6 col-md-6">  
+                        <h4 class="info-price">Price: </h4>
+                      </div>
+                      <div class="col-xs-6 col-md-6">
+                        <h4 class="info-price text-right">$99.00</h4>
+                      </div>
+                      <div class="col-xs-12 col-md-12">
+                        <button onclick="order()" type="submit" class="btn btn-danger btn-lg btn-block">Purchase</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>   
+            </div>
+          </div>    
+        </div>
+      </div>
+
+      <div class="product-description py-4">
+        <h2 class="product-description-head"style="border-bottom: 3px solid red">Description</h2>
+        <p>&nbsp The official Arsenal Adult 19/20 Short Sleeved Home Shirt has been created by adidas for our fans with a looser fit than that worn by the players on the pitch. The shirt displays our iconic home colours of red and white with form-fitting sleeves and taking design cues from the early nineties with a retro collar gives the shirt a classic, elegant look with a contemporary twist. The lightweight fabric features Climalite technology that works to channel moisture away from the body helping you stay cool and dry.</p>
+        <p>Wear your shirt with pride and show your support for the gunners.</p>
+        <p>Why not make it your own by having your chosen name and number printed on the back?</p>
+        <ul>
+          <li>Woven club badge to show your support</li>
+          <li>adidas logo and 3-stripe design on sleeves</li>
+          <li>Climalite technology sweeps moisture away from the skin so you stay dry every step of the way</li>
+          <li>Replica style – looser fit across the chest and shoulders with straight hemline</li>
+          <li>V-neckline</li>
+          <li>Regular-fit</li>
+        </ul>
+        <p>colour: Red/White</p>
+      </div>
+
+      <div class="row py-5">
+        <h2 class="card-deck-head"style="border-bottom: 3px solid red">Another Product</h2>
+        <div class="card-deck col-xs-12 py-2">
+          <div class="col-xs-3 col-md-3 card"><!--사진 크기 670*1000px 고정-->
+            <img src="img/laca1.jpg" class="card-img-top" alt="이미지를 불러올 수 없습니다.">
+            <div class="card-body">
+              <h5 class="card-title">Home KIT 19/20</h5>
+              <p class="card-text">The new Arsenal training home kit 19/20 is realesed with Adidas.</p>
+              <button class="btn btn-outline-secondary" href="#" role="button">View more</button>
+            </div>
+          </div>
+  
+          <div class="col-xs-3 col-md-3 card">
+            <img src="img/ozil_away.jpg" class="card-img-top" alt="이미지를 불러올 수 없습니다.">
+            <div class="card-body">
+              <h5 class="card-title">Away KIT 19/20</h5>
+              <p class="card-text">The new Arsenal training away kit 19/20 is realesed with Adidas.</p>
+              <button class="btn btn-outline-secondary" href="#" role="button">View more</button>
+            </div>
+          </div>
+  
+          <div class="col-xs-3 col-md-3 card">
+            <img src="img/lucas_third1.jpg" class="card-img-top" alt="이미지를 불러올 수 없습니다.">
+            <div class="card-body">
+              <h5 class="card-title">Third KIT 19/20</h5>
+              <p class="card-text">The new Arsenal training third kit 19/20 is realesed with Adidas.</p>
+              <button class="btn btn-outline-secondary" href="#" role="button">View more</button>
+            </div>
+          </div>
+
+          <div class="col-xs-3 col-md-3 card">
+            <img src="img/leno.jpg" class="card-img-top" alt="이미지를 불러올 수 없습니다.">
+            <div class="card-body">
+              <h5 class="card-title">Goalkeeper KIT 19/20</h5>
+              <p class="card-text">The new Arsenal training goalkeeper kit 19/20 is realesed with Adidas.</p>
+              <button class="btn btn-outline-secondary" href="#" role="button">View more</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">상품명</th>
+              <th scope="col">이름</th>
+              <th scope="col">수량</th>
+              <th scope="col">주소</th>
+              <th scope="col">전화번호</th>
+            </tr>
+          </thead>
+          <tbody id="order-box">
+            <tr>
+              <td>홈셔츠</td>
+              <td>오현택</td>
+              <td>2</td>
+              <td>인천광역시</td>
+              <td>010-1234-1234</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--footer 영역으로 필수 입력사항이 들어간다.-->
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+      <div class="row">
+        <div class="col-12 col-md">
+          <img class="mb-2" src="logo/iconmonstr-rocket-3.svg" alt="" width="24" height="24">
+          <small class="d-block mb-3 text-muted">© 2019 spartacodingclub 3</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Company</h5>
+          <ul class="list-unstyled text-small">
+            <li class="text-muted">업체명: SCC</li>
+            <li class="text-muted">대표자: 오현택</li>
+            <li class="text-muted">사업자번호: 123-45-67890</li>
+            <li class="text-muted">통신판매업 제 2019-OOOO-0000호</li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Contact</h5>
+          <ul class="list-unstyled text-small">
+            <li class="text-muted">대표전화: 02-1234-1234</li>
+            <li class="text-muted">모바일: 010-1234-1234</li>
+            <li class="text-muted">email: example@gmail.com</li>
+            <li class="text-muted">인천광역시 부평구 OOOO OOOO OOOO</li>
+          </ul>
+        </div>
+      </div>
+    </footer>    
+</body>
+</html>
